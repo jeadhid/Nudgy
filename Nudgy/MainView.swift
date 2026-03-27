@@ -385,8 +385,34 @@ struct ProfileEditorView: View {
                                 .onTapGesture { draftEmoji = emoji }
                         }
                     }
-                    .padding(.vertical, 6)
+                    .padding(.top, 6)
                 }
+                #if os(iOS)
+                VStack(spacing: 8) {
+                    Text("Or type any emoji:")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    
+                    TextField("", text: $draftEmoji)
+                        .font(.system(size: 30))
+                        .textFieldStyle(.plain)
+                        .frame(width: 48, height: 48)
+                        .multilineTextAlignment(.center)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(!emojiOptions.contains(draftEmoji) && !draftEmoji.isEmpty
+                                      ? Color.accentColor.opacity(0.25)
+                                      : Color.white.opacity(0.05))
+                        )
+                        .onChange(of: draftEmoji) { _, newValue in
+                            if newValue.count > 1 {
+                                draftEmoji = String(newValue.suffix(1))
+                            }
+                        }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 6)
+                #endif
             }
             .padding(20)
             .navigationTitle("Edit Profile")
@@ -406,6 +432,32 @@ struct ProfileEditorView: View {
                     Button("Cancel") { dismiss() }
                 }
             }
+            #if os(macOS)
+            VStack(spacing: 8) {
+                Text("Or type any emoji:")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                
+                TextField("", text: $draftEmoji)
+                    .font(.system(size: 30))
+                    .textFieldStyle(.plain)
+                    .frame(width: 48, height: 48)
+                    .multilineTextAlignment(.center)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(!emojiOptions.contains(draftEmoji) && !draftEmoji.isEmpty
+                                  ? Color.accentColor.opacity(0.25)
+                                  : Color.white.opacity(0.05))
+                    )
+                    .onChange(of: draftEmoji) { _, newValue in
+                        if newValue.count > 1 {
+                            draftEmoji = String(newValue.suffix(1))
+                        }
+                    }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 6)
+            #endif
         }
         .onAppear {
             draftName  = nickname
