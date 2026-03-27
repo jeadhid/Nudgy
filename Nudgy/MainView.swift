@@ -194,6 +194,7 @@ struct MainView: View {
                 }
             }
         }
+        .padding(.horizontal, 20)
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .refreshable {
@@ -367,7 +368,7 @@ struct ProfileEditorView: View {
         NavigationStack {
             Form {
                 Section("Your Name") {
-                    TextField("Nickname", text: $draftName)
+                    TextField("", text: $draftName)
                 }
                 Section("Favorite Emoji") {
                     LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 6), spacing: 12) {
@@ -387,6 +388,7 @@ struct ProfileEditorView: View {
                     .padding(.vertical, 6)
                 }
             }
+            .padding(20)
             .navigationTitle("Edit Profile")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -411,3 +413,5 @@ struct ProfileEditorView: View {
         }
     }
 }
+
+

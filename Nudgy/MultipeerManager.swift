@@ -36,7 +36,7 @@ private struct SpamKey: Hashable {
 
 private class SpamTracker {
     private var log: [SpamKey: [Date]] = [:]
-    private let limit = 3
+    private let limit = 10
     private let window: TimeInterval = 60
 
     func canSend(from local: String, to remote: String) -> Bool {
@@ -289,6 +289,9 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
 
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID,
                  withDiscoveryInfo info: [String: String]?) {
+        // Prevent discovering ourselves (or old phantom peers from before a refresh)
+        guard peerID.displayName != myPeerID.displayName else { return }
+
         nudgeLog("👀 found peer '\(peerID.displayName)'")
         let peer = DiscoveredPeer(id: peerID)
         DispatchQueue.main.async {
